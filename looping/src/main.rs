@@ -13,7 +13,7 @@ fn main() {
         i += 1;
 
         if input.trim() == ans {
-            println!("Number of trials: {} ", i);
+            println!("Number of trials: {}", i);
             break;
         }
     }
