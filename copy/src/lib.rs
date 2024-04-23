@@ -13,13 +13,13 @@
 //     }
 // }
 
-pub fn nbr_function(x: i32) -> (f64, f64) {
+pub fn nbr_function(x: i32) -> (i32, f64, f64) {
     let x_f64: f64 = x as f64;
 
     let exp_x = x_f64.exp();
-    let ln_x = x_f64.ln();
+    let ln_x = x_f64.abs().ln();
 
-    (exp_x, ln_x)
+    (x, exp_x, ln_x)
 }
 
 pub fn str_function(a: String) -> (String, String) {
