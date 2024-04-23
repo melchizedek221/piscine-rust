@@ -13,7 +13,7 @@
 //     }
 // }
 
-fn nbr_function(x: i32) -> (f64, f64) {
+pub fn nbr_function(x: i32) -> (f64, f64) {
     let x_f64: f64 = x as f64;
 
     let exp_x = x_f64.exp();
