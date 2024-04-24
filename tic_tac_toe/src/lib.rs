@@ -16,11 +16,11 @@
 
 pub fn tic_tac_toe(table: Vec<Vec<&str>>) -> String {
     if check_winner(&'O'.to_string(), &table) {
-        "Player O won".to_string()
+        "player O won".to_string()
     } else if check_winner(&'X'.to_string(), &table) {
-        "Player X won".to_string()
+        "player X won".to_string()
     } else {
-        "Tie".to_string()
+        "tie".to_string()
     }
 }
 
