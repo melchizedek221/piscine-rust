@@ -19,7 +19,7 @@ use rand::Rng;
 
 impl Suit {
     pub fn random() -> Suit {
-        let random_number = rand::thread_rng().gen_range(1..=5);
+        let random_number = rand::thread_rng().gen_range(1,5);
         Self::translate(random_number)
     }
 
@@ -35,7 +35,7 @@ impl Suit {
 
 impl Rank {
     pub fn random() -> Rank {
-        let random_number = rand::thread_rng().gen_range(1..=14);
+        let random_number = rand::thread_rng().gen_range(1,14);
         Self::translate(random_number)
     }
 
@@ -60,16 +60,16 @@ pub fn winner_card(card: &Card) -> bool {
     matches!(&card.rank, Rank::Ace) && matches!(&card.suit, Suit::Spade)
 }
 
-fn main() {
-	let your_card = Card {
-		rank: Rank::random(),
-		suit: Suit::random(),
-	};
+// fn main() {
+// 	let your_card = Card {
+// 		rank: Rank::random(),
+// 		suit: Suit::random(),
+// 	};
 
-	println!("Your card is {:?}", your_card);
+// 	println!("Your card is {:?}", your_card);
 
-	// Now if the card is an Ace of Spades print "You are the winner"
-	if winner_card(&your_card) {
-		println!("You are the winner!");
-	}
-}
+// 	// Now if the card is an Ace of Spades print "You are the winner"
+// 	if winner_card(&your_card) {
+// 		println!("You are the winner!");
+// 	}
+// }
