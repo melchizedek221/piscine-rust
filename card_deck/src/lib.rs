@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Clone)]
 pub enum Suit {
     Heart,
     Diamond,
@@ -6,7 +6,7 @@ pub enum Suit {
     Club
 }
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Clone)]
 pub enum Rank {
     Ace,
     Jack,
@@ -51,7 +51,7 @@ impl Rank {
 }
 
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Clone)]
 pub struct Card {
 	pub suit: Suit,
 	pub rank: Rank,
