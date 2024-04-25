@@ -3,7 +3,7 @@ pub enum Suit {
     Heart,
     Diamond,
     Spade,
-    Club
+    Club,
 }
 
 #[derive(Debug, Eq, PartialEq, Clone)]
@@ -12,7 +12,7 @@ pub enum Rank {
     Jack,
     Number(u8),
     Queen,
-    King
+    King,
 }
 
 use rand::Rng;
