@@ -17,6 +17,7 @@ pub enum Rank {
 
 use rand::Rng;
 
+#[derive(Debug, Eq, PartialEq, Clone)]
 impl Suit {
     pub fn random() -> Suit {
         let random_number = rand::thread_rng().gen_range(1..=4);
@@ -33,6 +34,7 @@ impl Suit {
     }
 }
 
+#[derive(Debug, Eq, PartialEq, Clone)]
 impl Rank {
     pub fn random() -> Rank {
         let random_number = rand::thread_rng().gen_range(1..=13);
