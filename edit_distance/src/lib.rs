@@ -14,25 +14,25 @@
 // }
 
 use std::cmp::min;
-pub fn edit_distance(source: &str, target: &str) -> usize {
-    if source.len() == 0 {
-        target.len() 
-    }
-    
-    if target.len() == 0 { 
-        source.len() 
-    }
-    
-    if target.chars().nth(0).unwrap() == source.chars().nth(0).unwrap() {
-        edit_distance(&source[1..], &target[1..])
-    }
- 
-    1 + min(
-        v1: min(
-            v1: edit_distance(&source[1..], target),
-            v2: edit_distance(source, &target[1..])
-        ),
-        v2: edit_distance(&source[1..], &target[1..])
 
+pub fn edit_distance(source: &str, target: &str) -> usize {
+    if source.is_empty() {
+        return target.len();
+    }
+
+    if target.is_empty() {
+        return source.len();
+    }
+
+    if source.chars().next().unwrap() == target.chars().next().unwrap() {
+        return edit_distance(&source[1..], &target[1..]);
+    }
+
+    1 + min(
+        min(
+            edit_distance(&source[1..], target),
+            edit_distance(source, &target[1..]),
+        ),
+        edit_distance(&source[1..], &target[1..]),
     )
 }
