@@ -43,7 +43,7 @@ impl Message {
         if self.content.is_empty() || self.content.contains("stupid") {
             None
         }else{
-            Some(&self.content.to_str())
+            Some(&self.content.as_str())
         }
     }
 }
