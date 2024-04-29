@@ -13,18 +13,21 @@
 //     }
 // }
 
-pub struct Flag(){
+use std::collections::HashMap;
+use std::num::ParseFloatError;
+
+pub struct Flag {
     pub short_hand: String,
     pub long_hand: String,
     pub desc: String,
 }
 
 impl Flag {
-    pub fn opt_flag(s1: &String, s2: &String) -> Flag {
-        Flag{
+    pub fn opt_flag(s1: &str, s2: &str) -> Flag {
+        Flag {
             short_hand: format!("-{}", s1.chars().next().unwrap()),
             long_hand: format!("--{}", s1),
-            desc: format!("{}", s2)
+            desc: format!("{}", s2),
         }
     }
 }
@@ -37,18 +40,28 @@ pub struct FlagsHandler {
 
 impl FlagsHandler {
     pub fn add_flag(&mut self, flag: (String, String), func: Callback) {
-        self.insert.flags(flag, Callback)
+        self.flags.insert(flag, func);
     }
+
     pub fn exec_func(&mut self, flag: (String, String), argv: &[&str]) -> String {
-        let func_cb = self.flags.get(&flag).unwrap();
-        func_cb(arg[0], arg[1]).unwrap_or_else(|err| err.to_string())
+        match self.flags.get(&flag) {
+            Some(func_cb) => match func_cb(argv[0], argv[1]) {
+                Ok(result) => result,
+                Err(err) => err.to_string(),
+            },
+            None => String::from("Function not found"),
+        }
     }
 }
 
 pub fn div(a: &str, b: &str) -> Result<String, ParseFloatError> {
-    a.parse::<f32>()? /  b.parse::<f32>()?
-
+    let a = a.parse::<f32>()?;
+    let b = b.parse::<f32>()?;
+    Ok((a / b).to_string())
 }
+
 pub fn rem(a: &str, b: &str) -> Result<String, ParseFloatError> {
-    a.parse::<f32>()? %  b.parse::<f32>()?
+    let a = a.parse::<f32>()?;
+    let b = b.parse::<f32>()?;
+    Ok((a % b).to_string())
 }
