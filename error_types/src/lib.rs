@@ -81,7 +81,7 @@ impl Form {
         } else {
             let now = Utc::now();
             let date = now.format("%Y-%m-%d %H:%M:%S").to_string();
-            Err(FormError::new("first_name".to_string(), self.first_name, errors.join(", "), date))
+            Err(FormError::new("first_name".to_string(), self.first_name.clone(), errors.join(", "), date))
         }
         
     }
