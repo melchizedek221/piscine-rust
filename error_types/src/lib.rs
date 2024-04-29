@@ -17,9 +17,9 @@ pub use chrono::{Utc, NaiveDate};
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct FormError {
-    form_values: (String, String),
-    date: String,
-    err: String,
+    pub form_values: (String, String),
+    pub date: String,
+    pub err: String,
 }
 
 impl FormError {
@@ -35,11 +35,11 @@ impl FormError {
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Form {
-    first_name: String,
-    last_name: String,
-    birth: NaiveDate,
-    birth_location: String,
-    password: String,
+    pub first_name: String,
+    pub last_name: String,
+    pub birth: NaiveDate,
+    pub birth_location: String,
+    pub password: String,
 }
 
 impl Form {
