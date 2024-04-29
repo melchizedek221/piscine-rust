@@ -16,7 +16,7 @@
 pub struct Flag(){
     pub short_hand: String,
     pub long_hand: String,
-    pub desc: String
+    pub desc: String,
 }
 
 impl Flag {
