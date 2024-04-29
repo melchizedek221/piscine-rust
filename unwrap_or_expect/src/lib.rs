@@ -28,16 +28,16 @@ pub fn fetch_data(server: Result<String, String>, security_level: Security) -> S
             server.expect("")
         },
         Security::High => {
-            &server.unwrap_or_else(|_| panic!("ERROR: program stops"))
+            server.unwrap_or_else(|_| panic!("ERROR: program stops"))
         },
         Security::Medium => {
-            &server.unwrap_or("WARNING: check the server".to_string())
+            server.unwrap_or("WARNING: check the server".to_string())
         },
         Security::Low => {
-            &server.unwrap_or_else(|e| format!("Not found: {}", e))
+            server.unwrap_or_else(|e| format!("Not found: {}", e))
         },
         Security::BlockServer => {
-            if let Ok(message) = &server {
+            if let Ok(message) = server {
                 panic!("{}", message);
             } else {
                 server.unwrap_err()
