@@ -24,29 +24,24 @@ pub enum Security {
 
 pub fn fetch_data(server: Result<String, String>, security_level: Security) -> String {
     match security_level {
-        Security::Unknown => server.expect(""),
-        Security::High => {
-            if let Err(_) = &server {
-                panic!("ERROR: program stops");
-            }
+        Security::Unknown => {
             server.expect("")
         },
+        Security::High => {
+            &server.unwrap_or_else(|_| panic!("ERROR: program stops"))
+        },
         Security::Medium => {
-            if let Err(_) = &server {
-                return String::from("WARNING: check the server");
-            }
-            server.unwrap()
+            &server.unwrap_or("WARNING: check the server".to_string())
         },
         Security::Low => {
-            server.unwrap_or_else(|err| format!("Not found: {}", err))
+            &server.unwrap_or_else(|e| format!("Not found: {}", e))
         },
         Security::BlockServer => {
-            match server {
-                Ok(url) => panic!("{}", url),
-                Err(err) => err,
+            if let Ok(message) = &server {
+                panic!("{}", message);
+            } else {
+                server.unwrap_err()
             }
-        }
+        },
     }
 }
-
-
