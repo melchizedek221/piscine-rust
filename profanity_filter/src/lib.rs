@@ -13,13 +13,27 @@
 //     }
 // }
 
+// pub fn add(left: usize, right: usize) -> usize {
+//     left + right
+// }
+
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+
+//     #[test]
+//     fn it_works() {
+//         let result = add(2, 2);
+//         assert_eq!(result, 4);
+//     }
+// }
+
 #[derive(Debug)]
 pub struct Message {
     content:  String,
     user: String
 }
 
-#[derive(Debug)]
 impl Message {
     pub fn new(ms: String, u: String) -> Message {
         Message { content:ms , user:u }
@@ -29,7 +43,7 @@ impl Message {
         if self.content.is_empty() || self.content.contains("stupid") {
             None
         }else{
-            Some(self.content)
+            Some(&self.content.to_str())
         }
     }
 }
