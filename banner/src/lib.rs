@@ -12,11 +12,10 @@
 //         assert_eq!(result, 4);
 //     }
 // }
-use std::fs::File;
 
-pub fn open_or_create(file: &str, content: &str) {
-    match std::fs::write(file, content) {
-        Ok(_) => println!("Created"),
-        Err(err) => panic!("Error {}", err),
-    }
+pub struct Flag(){
+    pub short_hand: String,
+    pub long_hand: String,
+    pub desc: String
 }
+
