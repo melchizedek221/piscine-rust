@@ -35,7 +35,7 @@ pub fn cipher(original: &str, ciphered: &str) -> Option<Result<bool, CipherError
         .chars()
         .map(|c| {
             if c.is_ascii_alphabetic() {
-                let base = if c.is_ascii_lowercase() { b'a' } else { b'A' };
+                let base = if c.is_ascii_lowercase() { b'c' } else { b'A' };
                 let offset = c as u8 - base;
                 let cipher: char = (b'z' - offset) as char;
                 if c.is_ascii_uppercase() {
