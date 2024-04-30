@@ -15,37 +15,37 @@
 
 use chrono::{Datelike, Weekday};
 
-// pub fn middle_day(year: i32) -> Option<Weekday> {
-//     let is_leap_year = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+pub fn middle_day(year: i32) -> Option<Weekday> {
+    let is_leap_year = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
 
-//     let days_in_year = if is_leap_year { 366 } else { 365 };
+    let days_in_year = if is_leap_year { 366 } else { 365 };
 
-//     if days_in_year % 2 == 0 {
-//         return None;
-//     }
-
-//     let middle_day = days_in_year / 2;
-
-//     let middle_date = chrono::NaiveDate::from_ymd(year, 1, 1)
-//         + chrono::Duration::days(middle_day as i64);
-
-//     Some(middle_date.weekday())
-// }
-
-fn middle_day(year: i32) -> Option<Weekday> {
-
-    let start_date = NaiveDate::from_ymd(year, 1, 1);
-    let end_date = NaiveDate::from_ymd(year, 12, 31);
-    let total_days = (end_date - start_date).num_days() + 1;
-
-    if total_days % 2 == 0 {
+    if days_in_year % 2 == 0 {
         return None;
     }
 
-    let middle_day = start_date + chrono::Duration::days(total_days / 2);
+    let middle_day = days_in_year / 2;
 
-    Some(middle_day.weekday())
+    let middle_date = chrono::NaiveDate::from_ymd(year, 1, 1)
+        + chrono::Duration::days(middle_day as i64);
+
+    Some(middle_date.weekday())
 }
+
+// fn middle_day(year: i32) -> Option<Weekday> {
+
+//     let start_date = NaiveDate::from_ymd(year, 1, 1);
+//     let end_date = NaiveDate::from_ymd(year, 12, 31);
+//     let total_days = (end_date - start_date).num_days() + 1;
+
+//     if total_days % 2 == 0 {
+//         return None;
+//     }
+
+//     let middle_day = start_date + chrono::Duration::days(total_days / 2);
+
+//     Some(middle_day.weekday())
+// }
 
 // fn main() {
 //     println!("{:?}", middle_day(1022).unwrap());
