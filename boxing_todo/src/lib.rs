@@ -1,22 +1,11 @@
-// pub fn add(left: usize, right: usize) -> usize {
-//     left + right
-// }
-
-// #[cfg(test)]
-// mod tests {
-//     use super::*;
-
-//     #[test]
-//     fn it_works() {
-//         let result = add(2, 2);
-//         assert_eq!(result, 4);
-//     }
-// }
-mod err;
-use err::{ ParseErr, ReadErr };
-
-pub use json::{parse, stringify};
 pub use std::error::Error;
+use std::fs::File;
+use std::io::Read;
+use std::path::Path;
+use json;
+use err::{ReadErr, ParseErr}; // Importation des types d'erreur
+
+mod err;
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Task {
@@ -33,11 +22,47 @@ pub struct TodoList {
 
 impl TodoList {
     pub fn get_todo(path: &str) -> Result<TodoList, Box<dyn Error>> {
-        let file_content = fs::read_to_string(path)?;
+        let path = Path::new(path);
+        
+        // Ouverture du fichier
+        let mut file = File::open(&path).map_err(|e| ReadErr {
+            child_err: Box::new(e),
+        })?;
+        
+        // Lecture du contenu du fichier
+        let mut contents = String::new();
+        file.read_to_string(&mut contents).map_err(|e| ReadErr {
+            child_err: Box::new(e),
+        })?;
+        
+        // Parsing du contenu JSON
+        let json = json::parse(&contents).map_err(|e| ParseErr::Malformed(Box::new(e)))?;
+        
+        // Récupération du titre
+        let title = json["title"].as_str().ok_or_else(|| ParseErr::Empty)?.to_string();
+        
+        // Récupération des tâches
+        let tasks = match json["tasks"].members().collect::<Vec<_>>() {
+            members if members.is_empty() => {
+                return Err(Box::new(ParseErr::Empty));
+            }
+            members => {
+                members
+                    .into_iter()
+                    .map(|task| {
+                        let id = task["id"].as_u32().unwrap();
+                        let description = task["description"].as_str().unwrap().to_string();
+                        let level = task["level"].as_u32().unwrap();
+                        Task {
+                            id,
+                            description,
+                            level,
+                        }
+                    })
+                    .collect()
+            }
+        };
 
-        // Désérialisation du contenu JSON en une instance de TodoList
-        let todo_list: TodoList = serde_json::from_str(&file_content)?;
-
-        Ok(todo_list)
+        Ok(TodoList { title, tasks })
     }
 }
