@@ -54,26 +54,31 @@
 
 extern crate chrono;
 use chrono::{Utc, Datelike, TimeZone, LocalResult};
-pub use chrono::Weekday as wd;  
+pub use chrono::Weekday as wd;
 
 pub fn middle_day(year: i32) -> Option<wd> {
+    // Vérifier si l'année est bissextile
     let is_leap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 
+    // Si l'année est bissextile et a 366 jours ou non bissextile et a 365 jours, retourner None
     if is_leap && 366 % 2 == 0 || !is_leap && 365 % 2 == 0 {
         return None;
     }
 
+    // Calculer le jour du milieu de l'année
     let middle_day = if is_leap {
         366 / 2 + 1
     } else {
         365 / 2 + 1
     };
 
-    let date = match Utc.with_ymd_and_hms(year, 1, 1, 0, 0, 0) {
+    // Créer une date à partir de l'année spécifiée
+    let date = match Utc.ymd(year, 1, 1) {
         LocalResult::Single(dt) => dt,
         _ => return None,
     };
 
+    // Ajouter le nombre de jours nécessaires pour atteindre le jour du milieu
     let new_date = date + chrono::Duration::days(middle_day as i64 - 1);
     Some(new_date.weekday())
 }
