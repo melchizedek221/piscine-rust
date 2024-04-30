@@ -65,7 +65,7 @@ impl Form {
 
         if self.password.len() < 8 {
             return Err(FormError::new( "password", &self.password,
-                "Password must be at least 8 characters long",
+                "At least 8 characters",
             ));
         }
 
