@@ -1,6 +1,6 @@
 use std::fmt;
 // use std::fmt::Display;
-// use std::error::Error;
+use std::error::Error;
 
 pub enum ParseErr {
     // expected public fields
