@@ -73,7 +73,7 @@ impl Form {
         !self.password.chars().any(char::is_numeric)||
         !self.password.chars().any(|c| !c.is_alphanumeric()) {
             return Err(FormError::new( "password", &self.password,
-                "Combination of different ASCII character types (numbers, letters and none alphanumeric characters",
+                "Combination of different ASCII character types (numbers, letters and none alphanumeric characters)",
             ));
         }
         Ok(vec!["Valid first name", "Valid password"])
