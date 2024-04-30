@@ -13,24 +13,24 @@
 //     }
 // }
 
-use chrono::{Datelike, Weekday};
+// use chrono::{Datelike, Weekday};
 
-pub fn middle_day(year: i32) -> Option<Weekday> {
-    let is_leap_year = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+// pub fn middle_day(year: i32) -> Option<Weekday> {
+//     let is_leap_year = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
 
-    let days_in_year = if is_leap_year { 366 } else { 365 };
+//     let days_in_year = if is_leap_year { 366 } else { 365 };
 
-    if days_in_year % 2 == 0 {
-        return None;
-    }
+//     if days_in_year % 2 == 0 {
+//         return None;
+//     }
 
-    let middle_day = days_in_year / 2;
+//     let middle_day = days_in_year / 2;
 
-    let middle_date = chrono::NaiveDate::from_ymd(year, 1, 1)
-        + chrono::Duration::days(middle_day as i64);
+//     let middle_date = chrono::NaiveDate::from_ymd(year, 1, 1)
+//         + chrono::Duration::days(middle_day as i64);
 
-    Some(middle_date.weekday())
-}
+//     Some(middle_date.weekday())
+// }
 
 // fn middle_day(year: i32) -> Option<Weekday> {
 
@@ -50,3 +50,30 @@ pub fn middle_day(year: i32) -> Option<Weekday> {
 // fn main() {
 //     println!("{:?}", middle_day(1022).unwrap());
 // }
+
+
+extern crate chrono;
+use chrono::{Utc, Datelike, TimeZone, LocalResult};
+pub use chrono::Weekday as wd;  
+
+pub fn middle_day(year: i32) -> Option<wd> {
+    let is_leap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+
+    if is_leap && 366 % 2 == 0 || !is_leap && 365 % 2 == 0 {
+        return None;
+    }
+
+    let middle_day = if is_leap {
+        366 / 2 + 1
+    } else {
+        365 / 2 + 1
+    };
+
+    let date = match Utc.with_ymd_and_hms(year, 1, 1, 0, 0, 0) {
+        LocalResult::Single(dt) => dt,
+        _ => return None,
+    };
+
+    let new_date = date + chrono::Duration::days(middle_day as i64 - 1);
+    Some(new_date.weekday())
+}
