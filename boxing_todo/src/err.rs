@@ -9,7 +9,7 @@ pub enum ParseErr {
 
 impl fmt::Display for ParseErr {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Fail to parses todo")
+        write!(f, "Fail to parse todo")
     }
 }
 
