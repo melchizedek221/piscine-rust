@@ -23,15 +23,14 @@ pub struct FormError {
 }
 
 impl FormError {
-    pub fn new(field_name: String, field_value: String, err: String, date: String) -> FormError {
-        Self {
-            form_values: (field_name, field_value),
-            date,
-            err,
+    pub fn new(field_name: &str, field_value: &str, err: &str) -> FormError {
+        FormError {
+            form_values: (field_name.to_string(), field_value.to_string()),
+            date: Utc::now().format("%Y-%m-%d %H:%M:%S").to_string(),
+            err: err.to_string(),
         }
     }
 }
-
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct Form {
@@ -50,7 +49,7 @@ impl Form {
         birth_location: String,
         password: String,
     ) -> Form {
-        Self {
+        Form {
             first_name,
             last_name,
             birth,
@@ -58,60 +57,25 @@ impl Form {
             password,
         }
     }
-    
-    pub fn validate(&self) -> Result<Vec<&str>, FormError> {
-        let mut errors: Vec<&str> = Vec::new();
 
+    pub fn validate(&self) -> Result<Vec<&str>, FormError> {
         if self.first_name.is_empty() {
-            errors.push("No user name");
+            return Err(FormError::new("first_name", &self.first_name, "No user name"));
         }
+
         if self.password.len() < 8 {
-            errors.push("At least 8 characters");
+            return Err(FormError::new( "password", &self.password,
+                "Password must be at least 8 characters long",
+            ));
         }
-        
-        if !self.password.chars().any(|c| c.is_digit(10))
-            || !self.password.chars().any(char::is_alphabetic)
-            || !self.password.chars().any(|c| !c.is_ascii_alphanumeric())
-        {
-            errors.push("Combination of different ASCII character types (numbers, letters and non-alphanumeric characters)");
+
+        if !self.password.chars().any(char::is_alphabetic)||
+        !self.password.chars().any(char::is_numeric)||
+        !self.password.chars().any(|c| !c.is_alphanumeric()) {
+            return Err(FormError::new( "password", &self.password,
+                "Combination of different ASCII character types (numbers, letters and none alphanumeric characters",
+            ));
         }
-        
-        if errors.is_empty() {
-            Ok(vec!["Valid first name", "Valid password"])
-        } else {
-            let now = Utc::now();
-            let date = now.format("%Y-%m-%d %H:%M:%S").to_string();
-            Err(FormError::new("first_name".to_string(), self.first_name.clone(), errors.join(", "), date))
-        }
-        
+        Ok(vec!["Valid first name", "Valid password"])
     }
 }
-// pub fn create_date(date: &str) -> NaiveDate {
-//     NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap()
-// }
-
-// fn main() {
-//     let mut form_output = Form::new(
-//         String::from("Lee"),
-//         String::from("Silva"),
-//         create_date("2015-09-05"),
-//         String::from("Africa"),
-//         String::from("qwqwsa1dty_"),
-//     );
-
-//     println!("{:?}", form_output);
-//     println!("{:?}", form_output.validate().unwrap());
-
-//     form_output.first_name = String::from("");
-//     println!("{:?}", form_output.validate().unwrap_err());
-
-//     form_output.first_name = String::from("as");
-//     form_output.password = String::from("dty_1");
-//     println!("{:?}", form_output.validate().unwrap_err());
-
-//     form_output.password = String::from("asdasASd(_");
-//     println!("{:?}", form_output.validate().unwrap_err());
-
-//     form_output.password = String::from("asdasASd123SA");
-//     println!("{:?}", form_output.validate().unwrap_err());
-// }
