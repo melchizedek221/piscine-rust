@@ -1,5 +1,5 @@
 use std::fmt;
-// use std::fmt::Display;
+use core::fmt::Display;
 use std::error::Error;
 
 pub enum ParseErr {
