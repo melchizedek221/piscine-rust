@@ -13,50 +13,46 @@
 //     }
 // }
 
+mod areas_volumes;
 pub use crate::areas_volumes::*;
 
-// lib.rs or main.rs or wherever your functions are defined
+type GS = GeometricalShapes;
+type GV = GeometricalVolumes;
+
 pub fn area_fit(
     x: usize,
     y: usize,
-    objects: areas_volumes::GeometricalShapes,
+    objects: GeometricalShapes,
     times: usize,
     a: usize,
     b: usize,
 ) -> bool {
-    let total_area = x * y;
-    let object_area = match objects {
-        areas_volumes::GeometricalShapes::Square => areas_volumes::square_area(a) as f64,
-        areas_volumes::GeometricalShapes::Circle => areas_volumes::circle_area(a),
-        areas_volumes::GeometricalShapes::Rectangle => areas_volumes::rectangle_area(a, b) as f64,
-        areas_volumes::GeometricalShapes::Triangle => areas_volumes::triangle_area(a, b),
+    let target_area = x * y;
+    let object_area = times * match objects {
+        GS::Square => square_area(a),
+        GS::Circle => circle_area(a).ceil() as usize,
+        GS::Rectangle => rectangle_area(a, b),
+        GS::Triangle => triangle_area(a, b).ceil() as usize,
     };
-
-    (object_area * times as f64) <= total_area as f64
+    object_area <= target_area
 }
-
 pub fn volume_fit(
     x: usize,
     y: usize,
     z: usize,
-    objects: areas_volumes::GeometricalVolumes,
+    objects: GeometricalVolumes,
     times: usize,
     a: usize,
     b: usize,
     c: usize,
 ) -> bool {
-    let total_volume = x * y * z;
-    let object_volume = match objects {
-        areas_volumes::GeometricalVolumes::Cube => areas_volumes::cube_volume(a) as f64,
-        areas_volumes::GeometricalVolumes::Sphere => areas_volumes::sphere_volume(a),
-        areas_volumes::GeometricalVolumes::Cone => areas_volumes::cone_volume(a, b),
-        areas_volumes::GeometricalVolumes::Pyramid => {
-            areas_volumes::triangular_pyramid_volume(a as f64, b)
-        }
-        areas_volumes::GeometricalVolumes::Parallelepiped => {
-            areas_volumes::parallelepiped_volume(a, b, c) as f64
-        }
-    };
-
-    (object_volume * times as f64) <= total_volume as f64
+let target_volume = x * y * z;
+let object_volume = times * match objects {
+    GV::Cube => cube_volume(a),
+    GV::Sphere => sphere_volume(a).ceil() as usize,
+    GV::Cone => cone_volume(a, b).ceil() as usize,
+    GV::Pyramid => triangular_pyramid_volume(a as f64, b).ceil() as usize,
+    GV::Parallelepiped => parallelepiped_volume(a, b, c),
+};
+object_volume <= target_volume
 }
