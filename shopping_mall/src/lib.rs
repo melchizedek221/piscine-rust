@@ -1,6 +1,6 @@
+pub mod mall;
 pub use crate::mall::*;
 pub use crate::store::*;
-pub mod mall;
 
 pub fn biggest_store(mall: &mall::Mall) -> Option<&store::Store> {
     let mut biggest: Option<&store::Store> = None;
