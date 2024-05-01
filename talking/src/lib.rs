@@ -14,15 +14,21 @@
 // }
 
 pub fn talking(text: &str) -> &str {
-    if text.is_empty() {
-        "Just say something!"
-    } else if text.chars().any(|ch| ch.is_ascii_uppercase()) {
-        if text.contains('?') {
-            "Quiet, I am thinking!"
-        } else {
-            "There is no need to yell, calm down!"
-        }
-    } else {
+    if text.trim().is_empty() {
+        return "Just say something!";
+    }
+
+    let is_all_caps = text.chars().all(|c| c.is_uppercase());
+    let is_question = text.ends_with('?');
+
+    if is_all_caps && is_question {
+        "Quiet, I am thinking!"
+    } else if is_all_caps {
+        "There is no need to yell, calm down!"
+    } else if is_question {
         "Sure."
+    } else {
+        "Interesting"
     }
 }
+
