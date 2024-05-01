@@ -16,7 +16,7 @@
 pub fn talking(text: &str) -> &str {
     if text.is_empty() {
         "Just say something!"
-    } else if text.is_ascii_uppercase() {
+    } else if text.chars().map(|ch| ch.is_ascii_uppercase()) {
         if text.contains('?') {
             "Quiet, I am thinking!"
         } else {
