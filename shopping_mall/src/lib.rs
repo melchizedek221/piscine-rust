@@ -1,4 +1,4 @@
-pub use crate::mall::floor::*;
+pub use crate::mall::*;
 pub mod mall;
 
 pub fn biggest_store(mall: &mall::Mall) -> Option<&store::Store> {
@@ -87,3 +87,5 @@ pub fn cut_or_raise(mall: &mut mall::Mall) {
         }
     }
 }
+
+
