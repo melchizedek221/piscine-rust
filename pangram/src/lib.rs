@@ -16,6 +16,6 @@
 
 
 pub fn is_pangram(s: &str) -> bool {
-    const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+    const ALPHABET: &str = "abcdefghijklmnopqrstuvwxyz";
     ALPHABET.chars().all(|ch| s.to_lowercase().contains(ch))
 }
