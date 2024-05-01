@@ -1,3 +1,6 @@
+pub use crate::mall::floor::*;
+pub mod mall;
+
 pub fn biggest_store(mall: &mall::Mall) -> Option<&store::Store> {
     let mut biggest: Option<&store::Store> = None;
     let mut max_size = 0;
