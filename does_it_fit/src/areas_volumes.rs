@@ -1,3 +1,5 @@
+mod areas_volumes;
+
     pub enum GeometricalShapes {
         Square,
         Circle,

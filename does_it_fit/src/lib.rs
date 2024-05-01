@@ -12,7 +12,6 @@
 //         assert_eq!(result, 4);
 //     }
 // }
-mod areas_volumes;
 pub use crate::areas_volumes::*;
 
 // lib.rs or main.rs or wherever your functions are defined
