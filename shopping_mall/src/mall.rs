@@ -32,7 +32,6 @@ impl Mall {
 }
 
 pub mod guard {
-
     #[derive(Debug, Clone, PartialEq)]
     pub struct Guard {
         pub name: String,
@@ -53,7 +52,6 @@ pub mod guard {
 }
 
 pub mod floor {
-
     #[derive(Debug, Clone, PartialEq)]
     pub struct Floor {
         pub name: String,
