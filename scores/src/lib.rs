@@ -31,7 +31,7 @@ pub fn score(s: &str) -> u64 {
 }
 
 // fn main() {
-    println!("{}", score("a"));
-    println!("{}", score("ã ê Á?"));
-    println!("{}", score("ThiS is A Test"));
-}
+//     println!("{}", score("a"));
+//     println!("{}", score("ã ê Á?"));
+//     println!("{}", score("ThiS is A Test"));
+// }
