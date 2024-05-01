@@ -21,7 +21,7 @@ pub fn talking(text: &str) -> &str {
     let is_all_caps = text.chars().all(|c| c.is_uppercase());
     let is_question = text.ends_with('?');
 
-    if is_all_caps && is_question {
+    if is_all_caps || is_question {
         "Quiet, I am thinking!"
     } else if is_all_caps {
         "There is no need to yell, calm down!"
