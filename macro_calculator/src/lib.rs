@@ -13,59 +13,48 @@
 //     }
 // }
 
+extern crate json; // Assume the 'json' crate is being used for JSON manipulation
 
+use json::JsonValue;
+
+#[derive(Debug)]
 pub struct Food {
-    name: String,
-    calories: Vec<String>,
-    fats: f64,
-    carbs: f64,
-    proteins: f64,
-    nbr_of_portions: f64,
+    pub name: String,
+    pub calories: [String; 2], // ["value_in_kJ", "value_in_kcal"]
+    pub fats: f64,
+    pub carbs: f64,
+    pub proteins: f64,
+    pub nbr_of_portions: f64,
 }
 
-pub fn calculate_macros(foods: Vec<Food>) -> String {
+pub fn calculate_macros(foods: Vec<Food>) -> JsonValue {
     let mut total_calories = 0.0;
+    let mut total_fats = 0.0;
     let mut total_carbs = 0.0;
     let mut total_proteins = 0.0;
-    let mut total_fats = 0.0;
 
-    for food in foods {
-        let calories_kj = food.calories[0].parse::<f64>().unwrap();
-        let calories_kcal = food.calories[1].parse::<f64>().unwrap();
-        let calories_per_portion = (calories_kj + calories_kcal) / food.nbr_of_portions;
+    for food in foods.iter() {
+        let kcal = food.calories[1]
+            .replace("kcal", "")
+            .parse::<f64>()
+            .expect("Failed to parse calories");
 
-        total_calories += calories_per_portion;
-        total_carbs += food.carbs;
-        total_proteins += food.proteins;
-        total_fats += food.fats;
+        total_calories += kcal * food.nbr_of_portions;
+        total_fats += food.fats * food.nbr_of_portions;
+        total_carbs += food.carbs * food.nbr_of_portions;
+        total_proteins += food.proteins * food.nbr_of_portions;
     }
 
-    let mut json_string = String::new();
-    json_string.push_str("{\n");
+    // Round to two decimal places, or one if it ends in a zero
+    total_calories = (total_calories * 100.0).round() / 100.0;
+    total_fats = (total_fats * 100.0).round() / 100.0;
+    total_carbs = (total_carbs * 100.0).round() / 100.0;
+    total_proteins = (total_proteins * 100.0).round() / 100.0;
 
-    let macros = vec["cals", "carbs", "proteins", "fats"];
-    let mut first = true;
-
-    for macro_name in macros {
-        if first {
-            first = false;
-        } else {
-            json_string.push_str(",\n");
-        }
-
-        json_string.push_str("\"");
-        json_string.push_str(macro_name);
-        json_string.push_str("\": ");
-        json_string.push_str(&format!("{:.1}", match macro_name {
-            "cals" => total_calories,
-            "carbs" => total_carbs,
-            "proteins" => total_proteins,
-            "fats" => total_fats,
-            _ => 0.0,
-        }));
+    json::object! {
+        "cals" => total_calories,
+        "carbs" => total_carbs,
+        "proteins" => total_proteins,
+        "fats" => total_fats
     }
-
-    json_string.push_str("\n}");
-
-    json_string
 }
