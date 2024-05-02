@@ -61,11 +61,11 @@ pub fn expected_variable(target_str: &str, expected_str: &str) -> Option<String>
     }
 
     let differ_chars = edit_distance(&target, &expected);
-    let alikeness = 1.0 - differ_chars as f64 / expected.len() as f64;
-    let alikeness = (alikeness * 100.0).round();
+    let exp = 1.0 - differ_chars as f64 / expected.len() as f64;
+    let exp = (exp * 100.0).round();
 
-    if alikeness > 50.0{
-        return Some(format!("{alikeness}%"));
+    if exp > 50.0{
+        return Some(format!("{exp}%"));
     }
 
     return None;
