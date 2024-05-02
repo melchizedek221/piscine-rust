@@ -23,13 +23,19 @@ pub struct Color {
 
 impl Color {
     pub fn swap(mut self, first: u8, second: u8) -> Color {
-        match (first, second) {
-            (0, 1) => { let temp = self.r; self.r = self.g; self.g = temp; }
-            (0, 2) => { let temp = self.r; self.r = self.b; self.b = temp; }
-            (0, 3) => { let temp = self.r; self.r = self.a; self.a = temp; }
-            (1, 2) => { let temp = self.g; self.g = self.b; self.b = temp; }
-            (1, 3) => { let temp = self.g; self.g = self.a; self.a = temp; }
-            (2, 3) => { let temp = self.b; self.b = self.a; self.a = temp; }
+        match (self.r, self.g, self.b, self.a) {
+            (r, g, _, _) if r == first && g == second => { self.r = second; self.g = first; }
+            (r, _, b, _) if r == first && b == second => { self.r = second; self.b = first; }
+            (r, _, _, a) if r == first && a == second => { self.r = second; self.a = first; }
+            (_, g, r, _) if g == first && r == second => { self.g = second; self.r = first; }
+            (_, g, _, b) if g == first && b == second => { self.g = second; self.b = first; }
+            (_, g, _, a) if g == first && a == second => { self.g = second; self.a = first; }
+            (_, _, b, r) if b == first && r == second => { self.b = second; self.r = first; }
+            (_, _, b, g) if b == first && g == second => { self.b = second; self.g = first; }
+            (_, _, b, a) if b == first && a == second => { self.b = second; self.a = first; }
+            (_, _, _, r) if self.a == first && r == second => { self.a = second; self.r = first; }
+            (_, _, _, g) if self.a == first && g == second => { self.a = second; self.g = first; }
+            (_, _, _, b) if self.a == first && b == second => { self.a = second; self.b = first; }
             _ => {}
         }
         self
