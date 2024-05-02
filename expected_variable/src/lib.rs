@@ -13,7 +13,8 @@
 //     }
 // }
 
-use case::{CaseExt, Case};
+pub use case;
+pub use case::CaseExt;
 
 //new edit distance
 pub fn edit_distance(source: &str, target: &str) -> usize {
@@ -22,18 +23,18 @@ pub fn edit_distance(source: &str, target: &str) -> usize {
 
     let mut dp: Vec<Vec<usize>> = vec![vec![0 as usize; len_target + 1]; len_source + 1];
 
-    for i in 1..=len_source {
+    for i in 1..(len_source+1){
         dp[i][0] = i;
     }
 
-    for j in 1..=len_target {
+    for j in 1..(len_target+1) {
         dp[0][j] = j;
     }
 
     let mut substitution_cost: usize;
     for j in 1..=len_target {
         for i in 1..=len_source {
-            if source.chars().nth(i - 1).unwrap() == target.chars().nth(j - 1).unwrap() {
+            if source.chars().nth(i-1).unwrap() == target.chars().nth(j-1).unwrap() {
                 substitution_cost = 0;
             } else {
                 substitution_cost = 1;
@@ -41,29 +42,31 @@ pub fn edit_distance(source: &str, target: &str) -> usize {
 
             dp[i][j] = std::cmp::min(
                 dp[i - 1][j] + 1,
-                std::cmp::min(dp[i][j - 1] + 1, dp[i - 1][j - 1] + substitution_cost),
+                std::cmp::min(dp[i][j - 1] + 1,
+                              dp[i - 1][j - 1] + substitution_cost)
             );
         }
     }
 
-    dp[len_source][len_target]
+    return dp[len_source][len_target];
 }
 
 pub fn expected_variable(target_str: &str, expected_str: &str) -> Option<String> {
-    let target = target_str.to_lowercase();
-    let expected = expected_str.to_lowercase();
+    let target: String = target_str.to_lowercase();
+    let expected: String = expected_str.to_lowercase();
 
-    if !target.is_camel_lowercase() && !target.is_snake_lowercase() {
-        return None;
+    if (!target.is_camel_lowercase() && target_str.to_camel().to_snake() != target) ||
+        target_str.contains(['-', ' ']) || target_str == "" || expected_str == ""{
+        return  None;
     }
 
     let differ_chars = edit_distance(&target, &expected);
-    let exp = 1.0 - differ_chars as f64 / expected.len() as f64;
-    let exp = (exp * 100.0).round() as usize;
+    let alikeness = 1.0 - differ_chars as f64 / expected.len() as f64;
+    let alikeness = (alikeness * 100.0).round();
 
-    if exp > 50 {
-        Some(format!("{}%", exp))
-    } else {
-        None
+    if alikeness > 50.0{
+        return Some(format!("{alikeness}%"));
     }
-}
+
+    return None;
+}                        
