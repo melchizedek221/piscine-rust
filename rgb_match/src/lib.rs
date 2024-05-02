@@ -13,7 +13,7 @@
 //     }
 // }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct Color {
     pub r: u8,
     pub g: u8,
