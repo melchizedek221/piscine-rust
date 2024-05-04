@@ -1,41 +1,51 @@
 pub fn spell(n: u64) -> String {
-    let ones = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-    let tens = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
-    let teens = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"];
-    let thousands = ["", "thousand", "million"];
-    let mut n = n;
-    if n < 10 {
-        return ones[n as usize].to_string();
-    } else if n < 20 {
-        return teens[(n - 10) as usize].to_string();
-    } else if n < 100 {
-        let digit1 = n / 10;
-        let digit2 = n % 10;
-        let mut result = tens[digit1 as usize].to_string();
-        if digit2 != 0 {
-            result.push_str("-");
-            result.push_str(ones[digit2 as usize]);
-        }
-        return result;
-    } else {
-        let mut result = String::new();
-        let mut i = 0;
-        while n > 0 {
-            let group = n % 1000;
-            if group > 0 {
-                let mut group_str = spell(group);
-                if i > 0 {
-                    group_str.push_str(" ");
-                    group_str.push_str(thousands[i]);
-                }
-                if !result.is_empty() {
-                    result.insert_str(0, " ");
-                } 
-                result.insert_str(0, &group_str);
-            }
-            n /= 1000;
-            i += 1;
-        }
-        return result;
+    if n == 0 {
+        return "zero".to_string();
     }
-}
+
+    let ones = vec![
+        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+        "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen",
+        "eighteen", "nineteen",
+    ];
+
+    let tens = vec![
+        "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety",
+    ];
+
+    if n < 20 {
+        return ones[(n - 1) as usize].to_string();
+    } else if n < 100 {
+        let ten = tens[((n / 10) - 2) as usize];
+        let one = if n % 10 != 0 {
+            ones[(n % 10 - 1) as usize]
+        } else {
+            ""
+        };
+        return format!("{}{}", ten, if one != "" { format!("-{}", one) } else { "".to_string() });
+    } else if n < 1000 {
+        let hundred = ones[((n / 100) - 1) as usize];
+        let remainder = n % 100;
+        if remainder == 0 {
+            return format!("{} hundred", hundred);
+        } else {
+            return format!("{} hundred {}", hundred, spell(remainder));
+        }
+    } else if n < 1_000_000 {
+        let thousand = spell(n / 1000);
+        let remainder = n % 1000;
+        if remainder == 0 {
+            return format!("{} thousand", thousand);
+        } else {
+            return format!("{} thousand {}", thousand, spell(remainder));
+        }
+    } else {
+        let million = spell(n / 1_000_000);
+        let remainder = n % 1_000_000;
+        if remainder == 0 {
+            return format!("{} million", million);
+        } else {
+            return format!("{} million {}", million, spell(remainder));
+        }
+    }
+}%                         
