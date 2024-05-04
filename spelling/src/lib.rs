@@ -48,4 +48,4 @@ pub fn spell(n: u64) -> String {
             return format!("{} million {}", million, spell(remainder));
         }
     }
-}%                         
+}                       
