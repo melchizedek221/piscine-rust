@@ -30,7 +30,7 @@ pub fn spell(n: u64) -> String {
                 }
                 if !result.is_empty() {
                     result.insert_str(0, " ");
-                }
+                } 
                 result.insert_str(0, &group_str);
             }
             n /= 1000;
