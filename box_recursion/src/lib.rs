@@ -65,7 +65,7 @@ impl WorkEnvironment {
         self.grade
             .as_ref()
             .map(|worker|{
-                (worker.name, worker.role)
+                (worker.name.clone(), worker.role.clone())
             })
     }
 }
