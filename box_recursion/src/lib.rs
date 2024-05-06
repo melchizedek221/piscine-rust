@@ -18,7 +18,7 @@ pub struct WorkEnvironment {
     pub grade: Link,
 }
 
-pub type Link =
+pub type Link = Option<Box<Worker>>;
 
 #[derive(Debug)]
 pub struct Worker {
