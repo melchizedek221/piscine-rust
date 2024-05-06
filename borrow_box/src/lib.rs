@@ -51,7 +51,7 @@ impl GameSession {
         } else if user_name == self.p2.0 {
             self.p2.1 += 1;
         }
-        // self.nb_games -= 1;
+        self.nb_games -= 1;
     }
     pub fn delete(self) -> String {
         format!("game deleted: id -> {}", self.id)
