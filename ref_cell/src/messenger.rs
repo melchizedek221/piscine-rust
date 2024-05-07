@@ -1,68 +1,37 @@
-// File: messenger.rs
+use std::{cell::RefCell, rc::Rc};
 
-use std::collections::{HashMap, VecDeque};
-use std::cell::RefCell;
-
-// Define the Logger trait
 pub trait Logger {
     fn warning(&self, msg: &str);
     fn info(&self, msg: &str);
     fn error(&self, msg: &str);
 }
-
-// Define the Tracker structure
-pub struct Tracker {
-    value: usize,
-    max: usize,
+pub struct Tracker<'a, T: Logger> {
+    pub logger: &'a T,
+    pub value: RefCell<usize>,
+    pub max: usize,
 }
 
-impl Tracker {
-    // Associated function to create a new Tracker instance
-    pub fn new(max: usize) -> Self {
+impl<'a, T: Logger> Tracker<'a, T> {
+    pub fn new(logger: &'a T, max: usize) -> Tracker<T> {
         Tracker {
-            value: 0,
+            logger,
+            value: RefCell::new(0),
             max,
         }
     }
 
-    // Set the value and check if it exceeds the maximum limit
-    pub fn set_value(&mut self, value: usize) {
-        self.value = value;
-    }
-
-    // Peek at the current usage percentage
-    pub fn peek(&self) -> usize {
-        (self.value * 100) / self.max
-    }
-}
-
-// Implement Logger for standard output
-pub struct StdoutLogger {
-    messages: RefCell<VecDeque<String>>,
-}
-
-impl StdoutLogger {
-    pub fn new() -> Self {
-        StdoutLogger {
-            messages: RefCell::new(VecDeque::new()),
+    pub fn set_value(&self, value: &Rc<usize>) {
+        *self.value.borrow_mut() = Rc::strong_count(&value);
+        let percent = *self.value.borrow() * 100 / self.max;
+        if percent >= 100 {
+            self.logger.error("Error: you are over your quota!");
+        } else if percent >= 70 {
+            self.logger.warning(&format!("Warning: you have used up over {}% of your quota! Proceeds with precaution", percent));
         }
     }
-
-    pub fn get_messages(&self) -> Vec<String> {
-        self.messages.borrow_mut().iter().cloned().collect()
+    
+    pub fn peek(&self, track_value : &Rc<usize>) {
+        let percent = Rc::strong_count(&track_value)  * 100 / self.max;
+        self.logger.info(&format!("Info: you are using up to {}% of your quota", percent));
     }
-}
-
-impl Logger for StdoutLogger {
-    fn warning(&self, msg: &str) {
-        self.messages.borrow_mut().push_back(format!("Warning: {}", msg));
-    }
-
-    fn info(&self, msg: &str) {
-        self.messages.borrow_mut().push_back(format!("Info: {}", msg));
-    }
-
-    fn error(&self, msg: &str) {
-        self.messages.borrow_mut().push_back(format!("Error: {}", msg));
-    }
-}
+}%                  
