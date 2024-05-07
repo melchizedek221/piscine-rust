@@ -13,41 +13,58 @@
 //     }
 // }
 
-pub mod messenger;
+mod messenger;
+
 use std::collections::HashMap;
-pub use std::cell::RefCell;
-pub use std::rc::Rc;
-pub use messenger::*;
+use std::cell::RefCell;
 
-
-#[derive(Debug)]
-
-pub struct Worker<T> {
-    pub track_value: Rc<T>,
-    pub mapped_messages: RefCell<HashMap<&'static str, String>>,
-    pub all_messages: RefCell<Vec<String>>,
+// Define the Worker structure
+pub struct Worker<'a> {
+    track_value: &'a mut messenger::Tracker,
+    mapped_messages: HashMap<&'static str, String>,
+    all_messages: RefCell<Vec<String>>,
 }
 
-impl<T> Worker<T> {
-    pub fn new(value: T) -> Self {
-        Self {
-            track_value: Rc::new(value),
-            mapped_messages: RefCell::new(Default::default()),
-            all_messages: RefCell::new(vec![])
+impl<'a> Worker<'a> {
+    // Associated function to create a new Worker instance
+    pub fn new(track_value: &'a mut messenger::Tracker) -> Self {
+        Worker {
+            track_value,
+            mapped_messages: HashMap::new(),
+            all_messages: RefCell::new(Vec::new()),
         }
     }
-}
-impl<T> Logger for Worker<T> {
-    fn warning(&self, msg: &str) {
-        self.mapped_messages.borrow_mut().insert("Warning", msg[9..].to_string());
-        self.all_messages.borrow_mut().push(msg.to_string());
+
+    // Logger implementation for Worker
+    pub fn logger(&mut self) -> &mut dyn messenger::Logger {
+        let worker = self;
+        struct WorkerLogger<'a> {
+            worker: &'a mut Worker<'a>,
+        }
+        impl<'a> messenger::Logger for WorkerLogger<'a> {
+            fn warning(&self, msg: &str) {
+                self.worker.mapped_messages.insert("warning", msg.to_owned());
+                self.worker.all_messages.borrow_mut().push(format!("Warning: {}", msg));
+            }
+            fn info(&self, msg: &str) {
+                self.worker.mapped_messages.insert("info", msg.to_owned());
+                self.worker.all_messages.borrow_mut().push(format!("Info: {}", msg));
+            }
+            fn error(&self, msg: &str) {
+                self.worker.mapped_messages.insert("error", msg.to_owned());
+                self.worker.all_messages.borrow_mut().push(format!("Error: {}", msg));
+            }
+        }
+        WorkerLogger { worker }
     }
-    fn info(&self, msg: &str) {
-        self.mapped_messages.borrow_mut().insert("Info", msg[6..].to_string());
-        self.all_messages.borrow_mut().push(msg.to_string());
+
+    // Getter for mapped messages
+    pub fn get_mapped_messages(&self) -> &HashMap<&'static str, String> {
+        &self.mapped_messages
     }
-    fn error(&self, msg: &str) {
-        self.mapped_messages.borrow_mut().insert("Error", msg[7..].to_string());
-        self.all_messages.borrow_mut().push(msg.to_string());
+
+    // Getter for all messages
+    pub fn get_all_messages(&self) -> Vec<String> {
+        self.all_messages.borrow().clone()
     }
 }
