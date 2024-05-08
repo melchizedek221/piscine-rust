@@ -27,6 +27,7 @@ pub struct Worker {
     pub mapped_messages: RefCell<HashMap<String, String>>,
     pub all_messages: RefCell<Vec<String>>,
 }
+
 impl Worker {
     pub fn new(i: usize) -> Self {
         Self {
@@ -36,6 +37,7 @@ impl Worker {
         }
     }
 }
+
 impl Logger for Worker {
     fn warning(&self, msg: &str) {
         self.mapped_messages.borrow_mut().insert("Warning".to_string(), msg.to_string().replace("Warning: ", "")).borrow();

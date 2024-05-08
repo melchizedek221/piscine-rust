@@ -5,6 +5,7 @@ pub trait Logger {
     fn info(&self, msg: &str);
     fn error(&self, msg: &str);
 }
+
 pub struct Tracker<'a, T: Logger> {
     pub logger: &'a T,
     pub value: RefCell<usize>,
@@ -29,9 +30,9 @@ impl<'a, T: Logger> Tracker<'a, T> {
             self.logger.warning(&format!("Warning: you have used up over {}% of your quota! Proceeds with precaution", percent));
         }
     }
-    
+
     pub fn peek(&self, track_value : &Rc<usize>) {
         let percent = Rc::strong_count(&track_value)  * 100 / self.max;
         self.logger.info(&format!("Info: you are using up to {}% of your quota", percent));
     }
-}%                  
+}
