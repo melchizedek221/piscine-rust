@@ -38,7 +38,7 @@ impl Workers {
     }
     
     pub fn is_dropped(&self, id: usize) -> bool {
-        self.states.borrow()[id]
+        self.states.borrow()[id];
     }
 
     pub fn add_drop(&self, id: usize) {
