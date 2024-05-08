@@ -24,7 +24,7 @@ pub struct Workers {
 
 impl Workers {
     pub fn new() -> Workers {
-        workers::default()
+        Self::default()
     }
 
     pub fn new_worker(&self, c: String) -> (usize, Thread) {
