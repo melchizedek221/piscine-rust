@@ -13,6 +13,6 @@
 //     }
 // }
 
-pub fn identity(v: T) -> T {
+pub fn identity<T>(v: T) -> T {
     v
 }
