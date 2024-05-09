@@ -29,12 +29,29 @@ impl<T> List<T> {
     }
 
     pub fn len(&self) -> usize {
-        let mut len = 0;
-        let mut node = &self.head;
-        while let Some(curr_node) = node {
-            len += 1;
-            node = &curr_node.next.as_ref().map(|boxed_node| &**boxed_node); //idk wtf is that piece of sh*t
+        // let mut len = 0;
+        // let mut node = &self.head;
+        // while let Some(curr_node) = node {
+        //     len += 1;
+        //     node = &curr_node.next.as_ref().map(|boxed_node| &**boxed_node); //idk wtf is that piece of sh*t
+        // }
+        // len
+        match &self.head {
+            Some(v) => {
+                let mut l = 0;
+                let mut curr = &v.next;
+                loop{
+                    match  curr{
+                        Some(node) => {
+                            curr = &node.next;
+                            l+=1;
+                        },
+                        None => { break; },
+                    }
+                }
+                l+1
+            },
+            None => 0
         }
-        len
     }
 }
