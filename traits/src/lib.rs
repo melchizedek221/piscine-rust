@@ -34,7 +34,7 @@ impl Player {
 }
 
 pub trait Food {
-	pub fn gives(&self) -> f64;
+	fn gives(&self) -> f64;
 }
 
 impl Food for Fruit {
