@@ -48,17 +48,6 @@ impl WorkEnvironment {
                 self.grade = worker.next;
                 worker.name
             })
-
-
-        // let last_worker = self.grade.clone();
-        // match last_worker {
-        //     None => None,
-        //     Some(w) => {
-        //         let last_worker_name = w.name;
-        //         self.grade = w.next;
-        //         Some(last_worker_name)
-        //     }
-        // }
     }
 
     pub fn last_worker(&self) -> Option<(String, String)> {

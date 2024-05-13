@@ -91,7 +91,6 @@ impl FromStr for BloodType {
     }
 }
 
-
 use std::fmt::{self, Debug};
 
 impl fmt::Debug for BloodType {
@@ -103,7 +102,6 @@ impl fmt::Debug for BloodType {
         write!(f, "{:?}{}", &self.antigen, rh_sign)
     }
 }
-
 
 impl BloodType {
     pub fn can_receive_from(&self, donor: &BloodType) -> bool {
@@ -163,5 +161,4 @@ impl BloodType {
 
         recipients
     }
-    
 }
