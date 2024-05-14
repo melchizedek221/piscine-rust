@@ -77,7 +77,7 @@ impl Scalar for f64 {
 #[derive(Debug, PartialEq, Eq)]
 pub struct Matrix<T>(pub Vec<Vec<T>>);
 
-impl <T: Scalar<Item = T>> Matrix<T> {
+impl <T: Scalar<Item = T> + + std::clone::Clone> Matrix<T> {
     // La méthode 'new' crée une nouvelle matrice de taille 1x1 initialisé avec zéro.
     pub fn new() -> Matrix<T> {
         // T::zero() crée un élément zéro de type T
