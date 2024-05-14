@@ -12,9 +12,7 @@
 //         assert_eq!(result, 4);
 //     }
 // }
-pub fn delete_prefix(prefix: &str, s: &str) -> Option<&str> {
-    if s.starts_with(prefix) {
-        return Some(&s[prefix.len()..]);
-    }
-    None
+
+pub fn delete_prefix<'a>(prefix: &str, s: &'a str) -> Option<&'a str> {
+    s.strip_prefix(prefix)
 }
