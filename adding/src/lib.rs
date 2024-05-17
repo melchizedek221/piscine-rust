@@ -13,6 +13,12 @@
 //     }
 // }
 
-fn add_curry(x: i32) -> Box<dyn Fn(i32) -> i32> {
-    Box::new(move |y| x + y)
+// fn add_curry(x: i32) -> Box<dyn Fn(i32) -> i32> {
+//     Box::new(move |y| x + y)
+// }
+
+use std::ops::Add;
+pub fn add_curry<T>(a: T) -> impl Fn(T) -> T
+where T: Add<Output=T> + Copy {
+    move |b: T| a + b
 }
