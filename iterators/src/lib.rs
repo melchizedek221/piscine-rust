@@ -1,32 +1,47 @@
+// Structure Collatz
 #[derive(Copy, Clone)]
 pub struct Collatz {
     pub v: u64,
 }
 
-impl Iterator for Collatz {
-    type Item = u64; // Le type de valeur qui est retournée à chaque itération.
+impl Collatz {
+    // Constructeur pour Collatz
+    pub fn new(n: u64) -> Self {
+        Collatz { v: n }
+    }
 
-    fn next(&mut self) -> Option<u64> {
-        // Si la valeur est 1 ou 0, nous avons atteint la fin de la séquence.
-        if self.v == 1 || self.v == 0 {
-            None
-        } else if self.v % 2 == 0 { // Si la valeur est pair.
+    // Renvoie la prochaine valeur dans la séquence de Collatz
+    fn next_val(&mut self) {
+        if self.v % 2 == 0 {
             self.v /= 2;
-            Some(self.v)
-        } else { // Si la valeur est impair.
-            self.v = 3*self.v + 1;
-            Some(self.v)
+        } else {
+            self.v = self.v * 3 + 1;
         }
     }
 }
 
-impl Collatz {
-    pub fn new(n: u64) -> Self {
-        Self { v: n }
+// Implémentation de l'itérateur pour Collatz
+impl Iterator for Collatz {
+    type Item = Self;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.v == 1 || self.v == 0 {
+            None
+        } else {
+            self.next_val();
+            Some(*self)
+        }
     }
 }
 
+// Fonction qui compte le nombre de pas nécessaires pour atteindre 1
 pub fn collatz(n: u64) -> usize {
-    let collatz_iter = Collatz::new(n);
-    collatz_iter.count() // count() renvoie le nombre d'éléments dans l'itérateur
+    let mut collatz_iter = Collatz::new(n);
+    let mut counter = 0;
+
+    while let Some(_) = collatz_iter.next() {
+        counter += 1;
+    }
+
+    counter
 }
