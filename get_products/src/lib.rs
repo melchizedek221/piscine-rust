@@ -1,9 +1,12 @@
 pub fn get_products(arr: Vec<usize>) -> Vec<usize> {
-    if arr.len() == 1 {
-        return vec![1];
+    if arr.len() <= 1 {
+        return vec![];
     }
-    
-    let product: usize = arr.iter().product();
-    
-    arr.into_iter().map(|n| product / n).collect::<Vec<usize>>()
+    let total = arr.iter()
+        .copied()
+        .reduce(|a, b| a * b)
+        .unwrap();
+    arr.into_iter()
+        .map(|n| total / n)
+        .collect()
 }
