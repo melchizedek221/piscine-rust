@@ -1,6 +1,18 @@
-use core::num;
+// pub fn add(left: usize, right: usize) -> usize {
+//     left + right
+// }
 
-use crate::RomanDigit::*;
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+
+//     #[test]
+//     fn it_works() {
+//         let result = add(2, 2);
+//         assert_eq!(result, 4);
+//     }
+// }
+
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum RomanDigit {
@@ -12,82 +24,86 @@ pub enum RomanDigit {
     C,
     D,
     M,
-    Num(u32),
 }
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RomanNumber(pub Vec<RomanDigit>);
 
 impl From<u32> for RomanDigit {
     fn from(n: u32) -> Self {
         match n {
-            1..=4 => I,
-            5..=9 => V,
-            10..=49 => X,
-            50..=99 => L,
-            100..=499 => C,
-            500..=999 => D,
-            1000..=5000 => M,
-            _ => Nulla,
+            0 => RomanDigit::Nulla,
+            1 => RomanDigit::I,
+            5 => RomanDigit::V,
+            10 => RomanDigit::X,
+            50 => RomanDigit::L,
+            100 => RomanDigit::C,
+            500 => RomanDigit::D,
+            1000 => RomanDigit::M,
+            _ => panic!(),
         }
     }
 }
 
-#[derive(Debug)]
-pub struct RomanNumber(pub Vec<RomanDigit>);
-
 impl From<u32> for RomanNumber {
-    fn from(n: u32) -> Self {
-        if n == 0 {
-            return RomanNumber(vec![Nulla]);
+    fn from(mut num: u32) -> Self{
+        if num == 0 {
+            return RomanNumber(vec![RomanDigit::Nulla]);
         }
-
-        let mut quotient = n;
-        let mut exponent = 0;
-        let mut reverse_roman = Vec::new();
-
-        while quotient != 0 {
-            let rest = quotient % 10;
-            quotient /= 10;
-            exponent += 1;
-            if rest == 9 {
-                reverse_roman.push(RomanDigit::from(10_u32.pow(exponent)));
-                reverse_roman.push(RomanDigit::from(10_u32.pow(exponent - 1)));
-            } else if rest == 4 {
-                reverse_roman.push(RomanDigit::from(10_u32.pow(exponent) / 2));
-                reverse_roman.push(RomanDigit::from(10_u32.pow(exponent - 1)));
-            } else if rest >= 5 {
-                let repetitions = rest - 5;
-                for _ in 0..repetitions {
-                    reverse_roman.push(RomanDigit::from(10_u32.pow(exponent - 1)));
+        
+        let mut result = Vec::new();
+        let div = vec![1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+        
+        for (i, n) in div.iter().enumerate() {
+            while n <= &num {
+                if i % 2 == 0 {
+                    result.push(RomanDigit::from(*n));
+                }else{
+                    let rem = div[i - 1] - div[i];
+                    result.push(RomanDigit::from(rem));
+                    result.push(RomanDigit::from(div[i - 1]));
                 }
-                reverse_roman.push(RomanDigit::from(10_u32.pow(exponent) / 2));
-            } else {
-                for _ in 0..rest {
-                    reverse_roman.push(RomanDigit::from(10_u32.pow(exponent - 1)))
-                }
+                num -= n;
             }
         }
-        reverse_roman.reverse();
-        reverse_roman.push(RomanDigit::Num(n));
-        RomanNumber(reverse_roman)
+        RomanNumber(result)
+    }
+}
+
+impl RomanNumber {
+    fn to_u32(&self) -> u32 {
+        let mut result = 0;
+        let mut prev_value = 0;
+
+        for digit in &self.0 {
+            let value = match digit {
+                Nulla => 0,
+                I => 1,
+                V => 5,
+                X => 10,
+                L => 50,
+                C => 100,
+                D => 500,
+                M => 1000,
+            };
+            result += if value > prev_value {
+                value - 2 * prev_value
+            } else {
+                value
+            };
+            prev_value = value;
+        }
+
+        result
     }
 }
 
 impl Iterator for RomanNumber {
-    type Item = Self;
-    fn next(&mut self) -> Option<Self::Item> {
-        if self.0.len() > 0 {
-            let n = self.0.clone()[self.0.len() - 1];
-            let mut number: u32 = 0;
-            match n {
-                RomanDigit::Num(num) => number = num,
-                _ => number = 0,
-            };
-            let mut new_r = RomanNumber::from(number + 1);
-            self.0.pop();
-            new_r.0.pop();
-            new_r.0.push(RomanDigit::Num(number + 1));
-            Some(new_r)
-        } else {
-            None
-        }
+    type Item = RomanNumber;
+     fn next(&mut self) -> Option<Self::Item> {
+        let mut value = self.to_u32();
+        value += 1;
+        *self = RomanNumber::from(value);
+        Some(self.clone())
     }
 }
